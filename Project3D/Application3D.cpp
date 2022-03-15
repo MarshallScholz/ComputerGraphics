@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include "Mesh.h"
+#include <imgui.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -71,8 +72,9 @@ bool Application3D::startup() {
 	0,0,0,1 };
 
 	m_light.colour = { 1, 1, 1 };
-	m_ambientLight = { 0.25f, 0.25f, 0.25f };
+	m_ambientLight = { 0.05f, 0.05f, 0.05f };
 
+	m_light.direction = glm::normalize(vec3(-1, -1, -1));
 	return true;
 }
 
@@ -84,11 +86,11 @@ void Application3D::shutdown() {
 void Application3D::update(float deltaTime) {
 
 	// query time since application started
-	float time = getTime() /20;
+	float time = 1;
 
 	// rotate light
-	m_light.direction = glm::normalize(vec3(glm::cos(getTime()),
-		glm::sin(getTime()), 0));
+	/*m_light.direction = glm::normalize(vec3(glm::cos(1),
+		glm::sin(1), 0));*/
 
 	// rotate camera
 	m_viewMatrix = glm::lookAt(vec3(glm::sin(time) * 10, 10, glm::cos(time) * 10),
@@ -111,6 +113,15 @@ void Application3D::update(float deltaTime) {
 
 	// add a transform so that we can see the axis
 	Gizmos::addTransform(mat4(1));
+
+
+	ImGui::Begin("Light Settings");
+	ImGui::DragFloat3("Sunlight Direction", &m_light.direction[0], 0.1f, -10.0f,
+		10.0f);
+	ImGui::DragFloat3("Sunlight Colour", &m_light.colour[0], 0.1f, 0.0f,
+		2.0f);
+	ImGui::End();
+
 
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
