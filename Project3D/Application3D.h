@@ -6,6 +6,8 @@
 #include "Mesh.h"
 #include "OBJMesh.h"
 
+class Camera;
+
 class Application3D : public aie::Application {
 public:
 
@@ -48,6 +50,6 @@ protected:
 	Light m_light;
 	glm::vec3 m_ambientLight;
 
-	glm::vec3 m_camera;
+	Camera* m_camera;
 
 };

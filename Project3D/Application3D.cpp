@@ -5,6 +5,7 @@
 #include <glm/ext.hpp>
 #include "Mesh.h"
 #include <imgui.h>
+#include "Camera.h"
 
 using glm::vec3;
 using glm::vec4;
@@ -23,6 +24,7 @@ bool Application3D::startup() {
 
 	setBackgroundColour(0.25f, 0.25f, 0.25f);
 
+	m_camera = new Camera();
 	// initialise gizmo primitive counts
 	Gizmos::create(10000, 10000, 10000, 10000);
 
@@ -64,10 +66,6 @@ bool Application3D::startup() {
 
 
 	// create simple camera transforms
-	m_viewMatrix = glm::lookAt(vec3(10), vec3(0), vec3(0, 1, 0));
-	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f,
-		getWindowWidth() / (float)getWindowHeight(),
-		0.1f, 1000.f);
 
 
 	m_shader.loadShader(aie::eShaderStage::VERTEX,
@@ -150,10 +148,6 @@ void Application3D::update(float deltaTime) {
 	/*m_light.direction = glm::normalize(vec3(glm::cos(1),
 		glm::sin(1), 0));*/
 
-	// rotate camera
-	m_viewMatrix = glm::lookAt(vec3(glm::sin(time) * 10, 10, glm::cos(time) * 10),
-		vec3(0), vec3(0, 1, 0));
-
 	// wipe the gizmos clean for this frame
 	Gizmos::clear();
 
@@ -173,13 +167,17 @@ void Application3D::update(float deltaTime) {
 	Gizmos::addTransform(mat4(1));
 
 
-	ImGui::Begin("Light Settings");
+	ImGui::Begin("Global Settings");
 	ImGui::DragFloat3("Sunlight Direction", &m_light.direction[0], 0.1f, -10.0f,
 		10.0f);
 	ImGui::DragFloat3("Sunlight Colour", &m_light.colour[0], 0.1f, 0.0f,
 		2.0f);
+	ImGui::DragFloat("Camera Speed", &m_camera->m_movementSpeed, 0.1f, 1.0f,
+		10.0f);
 	ImGui::End();
 
+	// rotate camera
+	m_camera->update(deltaTime);
 
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
@@ -192,10 +190,12 @@ void Application3D::draw() {
 
 	// wipe the screen to the background colour
 	clearScreen();
-	// update perspective in case window resized
-	m_projectionMatrix = glm::perspective(glm::pi<float>() * 0.25f,
-		getWindowWidth() / (float)getWindowHeight(),
-		0.1f, 1000.f);
+
+	// bind transform
+	glm::mat4 projectionMatrix = m_camera->getProjectionMatrix(getWindowWidth(),
+		(float)getWindowHeight());
+	glm::mat4 viewMatrix = m_camera->getViewMatrix();
+
 	// bind shader programs
 	m_phongShader.bind();
 
@@ -204,7 +204,7 @@ void Application3D::draw() {
 	m_phongShader.bindUniform("LightColour", m_light.colour);
 	m_phongShader.bindUniform("LightDirection", m_light.direction);
 	//bind bunny transform
-	auto pvm = m_projectionMatrix * m_viewMatrix * m_bunnyTransform;
+	auto pvm = projectionMatrix * viewMatrix * m_bunnyTransform;
 	m_phongShader.bindUniform("ProjectionViewModel", pvm);
 
 	//bind transforms for lighting
@@ -212,7 +212,7 @@ void Application3D::draw() {
 
 	//bind camera
 	m_phongShader.bindUniform("cameraPosition",
-		vec3(glm::inverse(m_viewMatrix)[3]));
+		vec3(glm::inverse(viewMatrix)[3]));
 
 	//draw bunny
 	//m_bunnyMesh.draw();
@@ -221,7 +221,7 @@ void Application3D::draw() {
 	// bind shader
 	m_texturedShader.bind();
 	// bind transform
-	pvm = m_projectionMatrix * m_viewMatrix * m_quadTransform;
+	pvm = projectionMatrix * viewMatrix * m_quadTransform;
 	m_texturedShader.bindUniform("ProjectionViewModel", pvm);
 	// bind texture location
 	m_texturedShader.bindUniform("diffuseTexture", 0);
@@ -238,7 +238,7 @@ void Application3D::draw() {
 	m_normalMapShader.bindUniform("LightColour", m_light.colour);
 	m_normalMapShader.bindUniform("LightDirection", m_light.direction);
 	//bind bunny transform
-	pvm = m_projectionMatrix * m_viewMatrix * m_spearTransform;
+	pvm = projectionMatrix * viewMatrix * m_spearTransform;
 	m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
 
 	//bind transforms for lighting
@@ -246,7 +246,7 @@ void Application3D::draw() {
 
 	//bind camera
 	m_normalMapShader.bindUniform("cameraPosition",
-		vec3(glm::inverse(m_viewMatrix)[3]));
+		vec3(glm::inverse(viewMatrix)[3]));
 
 	// draw mesh
 	m_spearMesh.draw();
@@ -261,7 +261,7 @@ void Application3D::draw() {
 
 
 	// draw 3D gizmos
-	Gizmos::draw(m_projectionMatrix * m_viewMatrix);
+	Gizmos::draw(projectionMatrix * viewMatrix);
 	// draw 2D gizmos using an orthogonal projection matrix
 	Gizmos::draw2D((float)getWindowWidth(), (float)getWindowHeight());
 
