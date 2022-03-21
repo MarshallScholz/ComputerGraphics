@@ -37,58 +37,14 @@ void Mesh::initialiseQuad()
 	vertices[4].normal = { 0, 1, 0, 0 };
 	vertices[5].normal = { 0, 1, 0, 0 };
 
-	// fill vertex buffer
-	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(Vertex),
-		vertices, GL_STATIC_DRAW);
+	//third element 
 
-	// enable first element as position
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE,
-		sizeof(Vertex), 0);
-
-	// enable second element as normal
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE,
-		sizeof(Vertex), (void*)16);
-
-	// unbind buffers (sets the reference object to null)
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	// quad has 2 triangles
-	triCount = 2;
-
-}
-
-void Mesh::initializeBox() 
-{
-	// check that the mesh is not initialized already
-	assert(vao == 0);
-	// generate buffers
-	glGenBuffers(1, &vbo);
-	glGenVertexArrays(1, &vao);
-	// bind vertex array aka a mesh wrapper
-	glBindVertexArray(vao);
-	// bind vertex buffer
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	// define 6 vertices for 2 triangles
-	Vertex vertices[6];
-
-	//first element position
-	vertices[0].position = { -0.5f, 0, 0.5f, 1 };
-	vertices[1].position = { 0.5f, 0, 0.5f, 1 };
-	vertices[2].position = { -0.5f, 0, -0.5f, 1 };
-	vertices[3].position = { -0.5f, 0, -0.5f, 1 };
-	vertices[4].position = { 0.5f, 0, 0.5f, 1 };
-	vertices[5].position = { 0.5f, 0, -0.5f, 1 };
-
-	//second element normals
-	vertices[0].normal = { 0, 1, 0, 0 };
-	vertices[1].normal = { 0, 1, 0, 0 };
-	vertices[2].normal = { 0, 1, 0, 0 };
-	vertices[3].normal = { 0, 1, 0, 0 };
-	vertices[4].normal = { 0, 1, 0, 0 };
-	vertices[5].normal = { 0, 1, 0, 0 };
+	vertices[0].texCoord = { 0, 1 }; // bottom left
+	vertices[1].texCoord = { 1, 1 }; // bottom right
+	vertices[2].texCoord = { 0, 0 }; // top left
+	vertices[3].texCoord = { 0, 0 }; // top left
+	vertices[4].texCoord = { 1, 1 }; // bottom right
+	vertices[5].texCoord = { 1, 0 }; // top right
 
 	// fill vertex buffer
 	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(Vertex),
@@ -104,54 +60,20 @@ void Mesh::initializeBox()
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE,
 		sizeof(Vertex), (void*)16);
 
+	// quad has 2 triangles
+	triCount = 2;
+
+	// enable third element as texture
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
+		sizeof(Vertex), (void*)32);
+
 	// unbind buffers (sets the reference object to null)
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	// quad has 2 triangles
-	triCount = 2;
 }
 
-void Mesh::initializeCylinder()
-{
-	Vertex vertices[8];
-	vertices[0].position = { -0.5f, 0, 0.5f, 1 };
-	vertices[1].position = { 0.5f, 0, 0.5f, 1 };
-	vertices[2].position = { -0.5f, 0, -0.5f, 1 };
-	vertices[3].position = { -0.5f, 0, -0.5f, 1 };
-	vertices[4].position = { -0.5f, 0, 0.5f, 1 };
-	vertices[5].position = { 0.5f, 0, 0.5f, 1 };
-	vertices[6].position = { -0.5f, 0, -0.5f, 1 };
-	vertices[7].position = { -0.5f, 0, -0.5f, 1 };
-	// fill vertex buffer
-	glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(Vertex),
-		vertices, GL_STATIC_DRAW);
-	// enable first element as position
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE,
-		sizeof(Vertex), 0);
-	// unbind buffers
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	// quad has 2 triangles
-	triCount = 12;
-}
-void Mesh::initializePyramid()
-{
-
-}
-void Mesh::initializeSphere()
-{
-
-}
-void Mesh::initializeCone()
-{
-
-}
-void Mesh::initializeGrid()
-{
-
-}
 
 void Mesh::initialise(unsigned int vertexCount,
 	const Vertex* vertices,
@@ -178,6 +100,11 @@ void Mesh::initialise(unsigned int vertexCount,
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE,
 		sizeof(Vertex), (void*)16);
 
+	// enable third element as texture
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
+		sizeof(Vertex), (void*)32);
+
 	// bind indices if there are any
 	if (indexCount != 0) {
 		glGenBuffers(1, &ibo);
@@ -195,11 +122,6 @@ void Mesh::initialise(unsigned int vertexCount,
 	glBindVertexArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	// unbind buffers
-	glBindVertexArray(1);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 1);
-	glBindBuffer(GL_ARRAY_BUFFER, 1);
 
 }
 
