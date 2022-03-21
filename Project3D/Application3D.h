@@ -27,8 +27,11 @@ protected:
 
 	aie::ShaderProgram m_shader;
 	aie::ShaderProgram m_phongShader;
-
 	aie::ShaderProgram m_texturedShader;
+	aie::ShaderProgram m_normalMapShader;
+
+
+
 	Mesh m_quadMesh;
 	glm::mat4 m_quadTransform;
 

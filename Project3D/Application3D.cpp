@@ -40,6 +40,19 @@ bool Application3D::startup() {
 		return false;
 	}
 
+
+	m_normalMapShader.loadShader(aie::eShaderStage::VERTEX,
+		"./shaders/normalmap.vert");
+	m_normalMapShader.loadShader(aie::eShaderStage::FRAGMENT,
+		"./shaders/normalmap.frag");
+
+	if (m_normalMapShader.link() == false) {
+		printf("Shader Error: %s\n",
+			m_normalMapShader.getLastError());
+		return false;
+	}
+
+
 	m_quadMesh.initialiseQuad();
 
 	// make the quad 10 units wide
@@ -131,7 +144,7 @@ void Application3D::shutdown() {
 void Application3D::update(float deltaTime) {
 
 	// query time since application started
-	float time = 1;
+	float time = 0;
 
 	// rotate light
 	/*m_light.direction = glm::normalize(vec3(glm::cos(1),
@@ -217,14 +230,33 @@ void Application3D::draw() {
 	// draw quad
 	m_quadMesh.draw();
 
+	// bind shader programs
+	m_normalMapShader.bind();
 
-
-	m_texturedShader.bind();
-	// bind transform
+	//bind shader light
+	m_normalMapShader.bindUniform("AmbientColour", m_ambientLight);
+	m_normalMapShader.bindUniform("LightColour", m_light.colour);
+	m_normalMapShader.bindUniform("LightDirection", m_light.direction);
+	//bind bunny transform
 	pvm = m_projectionMatrix * m_viewMatrix * m_spearTransform;
-	m_texturedShader.bindUniform("ProjectionViewModel", pvm);
+	m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
+
+	//bind transforms for lighting
+	m_normalMapShader.bindUniform("ModelMatrix", m_spearTransform);
+
+	//bind camera
+	m_normalMapShader.bindUniform("cameraPosition",
+		vec3(glm::inverse(m_viewMatrix)[3]));
+
 	// draw mesh
 	m_spearMesh.draw();
+
+	//m_texturedShader.bind();
+	//// bind transform
+	//pvm = m_projectionMatrix * m_viewMatrix * m_spearTransform;
+	//m_texturedShader.bindUniform("ProjectionViewModel", pvm);
+	//// draw mesh
+	//m_spearMesh.draw();
 
 
 
