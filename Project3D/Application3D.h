@@ -7,6 +7,8 @@
 #include "OBJMesh.h"
 
 class Camera;
+class Scene;
+class Instance;
 
 class Application3D : public aie::Application {
 public:
@@ -16,6 +18,11 @@ public:
 
 	virtual bool startup();
 	virtual void shutdown();
+
+	struct Light {
+		glm::vec3 direction;
+		glm::vec3 colour;
+	};
 
 	virtual void update(float deltaTime);
 	virtual void draw();
@@ -41,15 +48,17 @@ protected:
 	glm::mat4 m_bunnyTransform;
 
 	aie::OBJMesh m_spearMesh;
-	glm::mat4 m_spearTransform;
+	//glm::mat4 m_spearTransform;
 
-	struct Light {
-		glm::vec3 direction;
-		glm::vec3 colour;
-	};
+
 	Light m_light;
 	glm::vec3 m_ambientLight;
 
 	Camera* m_camera;
+
+	Scene* m_scene;
+
+	//glm::mat4 m_spearTransform;
+	Instance* m_spearInstance;
 
 };

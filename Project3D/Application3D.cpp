@@ -6,6 +6,8 @@
 #include "Mesh.h"
 #include <imgui.h>
 #include "Camera.h"
+#include "Instance.h"
+#include "Scene.h"
 
 using glm::vec3;
 using glm::vec4;
@@ -86,6 +88,8 @@ bool Application3D::startup() {
 		printf("Shader Error: %s\n", m_shader.getLastError());
 		return false;
 	}
+
+
 	if (m_bunnyMesh.load("./stanford/bunny.obj") == false) {
 		printf("Bunny Mesh Error!\n");
 		return false;
@@ -102,41 +106,59 @@ bool Application3D::startup() {
 		printf("Soulspear Mesh Error!\n");
 		return false;
 	}
-	m_spearTransform = {
-	1,0,0,0,
-	0,1,0,0,
-	0,0,1,0,
-	0,0,0,1
-	};
+
+
+	//m_spearTransform = {
+	//1,0,0,0,
+	//0,1,0,0,
+	//0,0,1,0,
+	//0,0,0,1
+	//};
 
 
 
-
+	Light light;
+	light.colour = { 1, 1, 1 };
+	light.direction = vec3(1, -1, 1);
 
 	m_light.colour = { 1, 1, 1 };
 	m_ambientLight = { 0.05f, 0.05f, 0.05f };
 
 	m_light.direction = glm::normalize(vec3(-1, -1, -1));
 
+	m_scene = new Scene(m_camera, glm::vec2(getWindowWidth(),
+		getWindowHeight()), light, glm::vec3(0.25f, 0.25f, 0.25f));
 
 
-	//// load imaginary texture
-	//aie::Texture texture1;
-	//texture1.load("mytexture.png");
-	//// create a 2x2 black-n-white checker texture
-	//// RED simply means one colour channel, i.e. grayscale
-	//aie::Texture texture2;
-	//unsigned char texelData[4] = { 0, 255, 255, 0 };
-	//texture2.create(2, 2, aie::Texture::RED, texelData);
+	glm::mat4 spearTransform
+	{
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		0,0,0,1
+	};
+
+	Instance* spearInstance1 = new Instance(spearTransform, &m_spearMesh,
+		&m_normalMapShader);
 
 
+	spearInstance1->setTransform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 
+	m_scene->addInstance(spearInstance1);
+
+	Instance* spearInstance2 = new Instance(spearTransform, &m_spearMesh,
+		&m_normalMapShader);
+
+	spearInstance2->setTransform(glm::vec3(3, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+
+	m_scene->addInstance(spearInstance2);
 	return true;
 }
 
 void Application3D::shutdown() {
 
 	Gizmos::destroy();
+	delete m_scene;
 }
 
 void Application3D::update(float deltaTime) {
@@ -175,6 +197,8 @@ void Application3D::update(float deltaTime) {
 	ImGui::DragFloat("Camera Speed", &m_camera->m_movementSpeed, 0.1f, 1.0f,
 		10.0f);
 	ImGui::End();
+
+	m_scene->setLight(m_light);
 
 	// rotate camera
 	m_camera->update(deltaTime);
@@ -230,26 +254,7 @@ void Application3D::draw() {
 	// draw quad
 	m_quadMesh.draw();
 
-	// bind shader programs
-	m_normalMapShader.bind();
-
-	//bind shader light
-	m_normalMapShader.bindUniform("AmbientColour", m_ambientLight);
-	m_normalMapShader.bindUniform("LightColour", m_light.colour);
-	m_normalMapShader.bindUniform("LightDirection", m_light.direction);
-	//bind bunny transform
-	pvm = projectionMatrix * viewMatrix * m_spearTransform;
-	m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
-
-	//bind transforms for lighting
-	m_normalMapShader.bindUniform("ModelMatrix", m_spearTransform);
-
-	//bind camera
-	m_normalMapShader.bindUniform("cameraPosition",
-		vec3(glm::inverse(viewMatrix)[3]));
-
-	// draw mesh
-	m_spearMesh.draw();
+	m_scene->draw();
 
 	//m_texturedShader.bind();
 	//// bind transform

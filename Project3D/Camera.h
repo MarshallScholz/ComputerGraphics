@@ -11,9 +11,9 @@ public:
 	glm::mat4 getProjectionMatrix(float w, float h);
 	void update(float deltaTime);
 
+	glm::vec3 getPosition() { return m_position; }
+
 	float m_movementSpeed = 1;
-	void setMovementSpeed(float movementSpeed) { m_movementSpeed = movementSpeed; }
-	float getMovementSpeed() { return m_movementSpeed; }
 private:
 	float m_theta = 0;
 	float m_phi = 0;
