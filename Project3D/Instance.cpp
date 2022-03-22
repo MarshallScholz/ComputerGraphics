@@ -3,9 +3,9 @@
 #include <glm/common.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
+#include "Light.h"
 
-
-void Instance::draw(Camera* camera, float windowWidth, float windowHeight, glm::vec3 ambientLight, Application3D::Light* light)
+void Instance::draw(Camera* camera, float windowWidth, float windowHeight, glm::vec3 ambientLight, Light* light)
 {
 	// set the shader pipeline
 	m_shader->bind();
@@ -38,6 +38,13 @@ void Instance::draw(Scene* scene)
 	m_shader->bindUniform("LightColour", scene->getLight().colour);
 	m_shader->bindUniform("LightDirection", scene->getLight().direction);
 	m_shader->bindUniform("cameraPosition", scene->getCamera()->getPosition());
+
+	m_shader->bindUniform("cameraPosition", scene->getCamera()->getPosition());
+	int numLights = scene->getNumLights();
+	m_shader->bindUniform("numLights", numLights);
+	m_shader->bindUniform("PointLightPosition", numLights, scene->getPointlightPositions());
+	m_shader->bindUniform("PointLightColour", numLights, scene->getPointlightColours());
+
 	// draw mesh
 	m_mesh->draw();
 }

@@ -12,11 +12,12 @@ out vec3 vBiTangent;
 uniform mat4 ProjectionViewModel;
 // we need the model matrix seperate
 uniform mat4 ModelMatrix;
+
 void main() {
-vPosition = ModelMatrix * Position;
-vNormal = (ModelMatrix * Normal).xyz;
-vTexCoord = TexCoord;
-vTangent = (ModelMatrix * vec4(Tangent.xyz,0)).xyz;
-vBiTangent = cross(vNormal, vTangent) * Tangent.w;
-gl_Position = ProjectionViewModel * Position;
+	vPosition = ModelMatrix * Position;
+	vNormal = (ModelMatrix * Normal).xyz;
+	vTexCoord = TexCoord;
+	vTangent = (ModelMatrix * vec4(Tangent.xyz,0)).xyz;
+	vBiTangent = cross(vNormal, vTangent) * Tangent.w;
+	gl_Position = ProjectionViewModel * Position;
 }

@@ -19,7 +19,7 @@ public:
 	}
 
 
-	void draw(Camera* camera, float windowWidth, float windowHeight, glm::vec3 ambientLight, Application3D::Light* light);
+	void draw(Camera* camera, float windowWidth, float windowHeight, glm::vec3 ambientLight, Light* light);
 
 	void draw(Scene* scene);
 

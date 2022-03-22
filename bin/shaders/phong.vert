@@ -7,8 +7,9 @@ out vec3 vNormal;
 uniform mat4 ProjectionViewModel;
 // we need this matrix to transform the normal
 uniform mat4 ModelMatrix;
-void main() {
-vPosition = ModelMatrix * Position;
-vNormal = (ModelMatrix * Normal).xyz;
-gl_Position = ProjectionViewModel * Position;
+void main() 
+{
+	vPosition = ModelMatrix * Position;
+	vNormal = (ModelMatrix * Normal).xyz;
+	gl_Position = ProjectionViewModel * Position;
 }

@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Mesh.h"
 #include "OBJMesh.h"
+#include "Light.h"
 
 class Camera;
 class Scene;
@@ -18,11 +19,6 @@ public:
 
 	virtual bool startup();
 	virtual void shutdown();
-
-	struct Light {
-		glm::vec3 direction;
-		glm::vec3 colour;
-	};
 
 	virtual void update(float deltaTime);
 	virtual void draw();

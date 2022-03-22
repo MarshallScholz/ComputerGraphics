@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Instance.h"
 #include "Scene.h"
+#include "Light.h"
 
 using glm::vec3;
 using glm::vec4;
@@ -117,9 +118,9 @@ bool Application3D::startup() {
 
 
 
-	Light light;
-	light.colour = { 1, 1, 1 };
-	light.direction = vec3(1, -1, 1);
+	//Light light;
+	//light.colour = { 1, 1, 1 };
+	//light.direction = vec3(1, -1, 1);
 
 	m_light.colour = { 1, 1, 1 };
 	m_ambientLight = { 0.05f, 0.05f, 0.05f };
@@ -127,7 +128,7 @@ bool Application3D::startup() {
 	m_light.direction = glm::normalize(vec3(-1, -1, -1));
 
 	m_scene = new Scene(m_camera, glm::vec2(getWindowWidth(),
-		getWindowHeight()), light, glm::vec3(0.25f, 0.25f, 0.25f));
+		getWindowHeight()), m_light, glm::vec3(0.25f, 0.25f, 0.25f));
 
 
 	glm::mat4 spearTransform
@@ -152,6 +153,11 @@ bool Application3D::startup() {
 	spearInstance2->setTransform(glm::vec3(3, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 
 	m_scene->addInstance(spearInstance2);
+
+	// red light on the left
+	m_scene->getPointLights().push_back(Light(vec3(5, 3, 0), vec3(1, 0, 0), 50));
+	// green light on the right
+	m_scene->getPointLights().push_back(Light(vec3(-5, 3, 0), vec3(0, 1, 0), 50));
 	return true;
 }
 
@@ -199,6 +205,8 @@ void Application3D::update(float deltaTime) {
 	ImGui::End();
 
 	m_scene->setLight(m_light);
+
+	m_scene->update(deltaTime);
 
 	// rotate camera
 	m_camera->update(deltaTime);
