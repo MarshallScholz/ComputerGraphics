@@ -25,6 +25,7 @@ public:
 		m_shader = shader;
 	}
 
+	void initializeShader(Scene* scene);
 
 	void draw(Camera* camera, float windowWidth, float windowHeight, glm::vec3 ambientLight, Light* light);
 
@@ -33,6 +34,8 @@ public:
 	glm::mat4 makeTransform(glm::vec3 position, glm::vec3 eulerAngles, glm::vec3 scale);
 
 	void setTransform(glm::vec3 position, glm::vec3 eulerAngles, glm::vec3 scale);
+
+	aie::ShaderProgram* getShader() { return m_shader; }
 
 protected:
 	glm::mat4 m_transform;

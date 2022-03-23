@@ -3,9 +3,17 @@
 #include "Light.h"
 #include <imgui.cpp>
 #include <sstream>
+#include <map>
 void Scene::addInstance(Instance* instance)
 {
 	m_instances.push_back(instance);
+
+	auto search = shaderMap.find(instance->getShader());
+	if (search != shaderMap.end())
+		return;
+
+	shaderMap.insert(std::make_pair(instance->getShader(), shaderMap.size() + 1));
+	shaderKey[shaderMap.size()] = instance->getShader();
 }
 Scene::Scene(Camera* camera, glm::vec2 windowSize, Light& light, glm::vec3 ambientLight)
 {
@@ -44,9 +52,25 @@ void Scene::draw()
 		m_pointLightColours[i] = m_pointLights[i].colour;
 		m_pointLights[i].draw();
 	}
-	for (auto it = m_instances.begin(); it != m_instances.end(); it++)
+
+	for (int s = 0; s < shaderMap.size(); s++)
 	{
-		Instance* instance = *it;
-		instance->draw(this);
+		bool shaderInitialized = false;
+		for (int i = 0; i < m_instances.size(); i++) 
+		{
+			Instance* currentInstance = m_instances.front() + i;
+			if (shaderKey[s] == currentInstance->getShader())
+			{
+				if (shaderInitialized == false) {
+					currentInstance->initializeShader(this);
+				}
+				currentInstance->draw(this);
+			}
+		}
 	}
+	//for (auto it = m_instances.begin(); it != m_instances.end(); it++)
+	//{
+	//	Instance* instance = *it;
+	//	instance->draw(this);
+	//}
 }
