@@ -11,6 +11,7 @@ public:
 		colour = col * intensity;
 	}
 
+	void update(float deltaTime);
 	void draw();
 
 	glm::vec3 direction;

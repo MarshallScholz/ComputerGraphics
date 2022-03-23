@@ -23,14 +23,8 @@ Application3D::~Application3D() {
 
 }
 
-bool Application3D::startup() {
-
-	setBackgroundColour(0.25f, 0.25f, 0.25f);
-
-	m_camera = new Camera();
-	// initialise gizmo primitive counts
-	Gizmos::create(10000, 10000, 10000, 10000);
-
+bool Application3D::loadShaders()
+{
 	m_texturedShader.loadShader(aie::eShaderStage::VERTEX,
 		"./shaders/textured.vert");
 	m_texturedShader.loadShader(aie::eShaderStage::FRAGMENT,
@@ -40,11 +34,6 @@ bool Application3D::startup() {
 			m_texturedShader.getLastError());
 		return false;
 	}
-	if (m_gridTexture.load("./textures/numbered_grid.tga") == false) {
-		printf("Failed to load texture!\n");
-		return false;
-	}
-
 
 	m_normalMapShader.loadShader(aie::eShaderStage::VERTEX,
 		"./shaders/normalmap.vert");
@@ -56,20 +45,6 @@ bool Application3D::startup() {
 			m_normalMapShader.getLastError());
 		return false;
 	}
-
-
-	m_quadMesh.initialiseQuad();
-
-	// make the quad 10 units wide
-	m_quadTransform = {
-	10,0,0,0,
-	0,10,0,0,
-	0,0,10,0,
-	0,0,0,1 };
-
-
-	// create simple camera transforms
-
 
 	m_shader.loadShader(aie::eShaderStage::VERTEX,
 		"./shaders/simple.vert");
@@ -89,38 +64,48 @@ bool Application3D::startup() {
 		printf("Shader Error: %s\n", m_shader.getLastError());
 		return false;
 	}
+}
 
+bool Application3D::loadModels()
+{
 
 	if (m_bunnyMesh.load("./stanford/bunny.obj") == false) {
 		printf("Bunny Mesh Error!\n");
 		return false;
 	}
-	m_bunnyTransform = {
-	0.5f,0,0,0,
-	0,0.5f,0,0,
-	0,0,0.5f,0,
-	0,0,0,1
-	};
 
 	if (m_spearMesh.load("./soulspear/soulspear.obj",
 		true, true) == false) {
 		printf("Soulspear Mesh Error!\n");
 		return false;
 	}
+}
 
+bool Application3D::loadTextures()
+{
+	if (m_gridTexture.load("./textures/numbered_grid.tga") == false) {
+		printf("Failed to load texture!\n");
+		return false;
+	}
+}
 
-	//m_spearTransform = {
-	//1,0,0,0,
-	//0,1,0,0,
-	//0,0,1,0,
-	//0,0,0,1
-	//};
+void Application3D::createScene()
+{
+	m_quadMesh.initialiseQuad();
 
+	// make the quad 10 units wide
+	m_quadTransform = {
+	10,0,0,0,
+	0,10,0,0,
+	0,0,10,0,
+	0,0,0,1 };
 
-
-	//Light light;
-	//light.colour = { 1, 1, 1 };
-	//light.direction = vec3(1, -1, 1);
+	m_bunnyTransform = {
+	0.5f,0,0,0,
+	0,0.5f,0,0,
+	0,0,0.5f,0,
+	0,0,0,1
+	};
 
 	m_light.colour = { 1, 1, 1 };
 	m_ambientLight = { 0.05f, 0.05f, 0.05f };
@@ -142,22 +127,40 @@ bool Application3D::startup() {
 	Instance* spearInstance1 = new Instance(spearTransform, &m_spearMesh,
 		&m_normalMapShader);
 
-
 	spearInstance1->setTransform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-
 	m_scene->addInstance(spearInstance1);
 
 	Instance* spearInstance2 = new Instance(spearTransform, &m_spearMesh,
 		&m_normalMapShader);
 
 	spearInstance2->setTransform(glm::vec3(3, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-
 	m_scene->addInstance(spearInstance2);
+
+	//Instance* bunnyInstance = new Instance(m_bunnyTransform, &m_bunnyMesh, &m_phongShader);
+	//m_scene->addInstance(bunnyInstance);
 
 	// red light on the left
 	m_scene->getPointLights().push_back(Light(vec3(5, 3, 0), vec3(1, 0, 0), 50));
 	// green light on the right
 	m_scene->getPointLights().push_back(Light(vec3(-5, 3, 0), vec3(0, 1, 0), 50));
+}
+
+
+bool Application3D::startup() {
+
+	setBackgroundColour(0.25f, 0.25f, 0.25f);
+
+	m_camera = new Camera();
+	// initialise gizmo primitive counts
+	Gizmos::create(10000, 10000, 10000, 10000);
+
+	//if any of these fail to load, exit the application
+	if (loadShaders() == false) { return false; }
+	if (loadModels() == false) { return false; }
+	if (loadTextures() == false) { return false; }
+
+	createScene();
+	
 	return true;
 }
 
@@ -167,15 +170,8 @@ void Application3D::shutdown() {
 	delete m_scene;
 }
 
-void Application3D::update(float deltaTime) {
-
-	// query time since application started
-	float time = 0;
-
-	// rotate light
-	/*m_light.direction = glm::normalize(vec3(glm::cos(1),
-		glm::sin(1), 0));*/
-
+void Application3D::update(float deltaTime) 
+{
 	// wipe the gizmos clean for this frame
 	Gizmos::clear();
 
@@ -195,6 +191,7 @@ void Application3D::update(float deltaTime) {
 	Gizmos::addTransform(mat4(1));
 
 
+	//Update sunlight
 	ImGui::Begin("Global Settings");
 	ImGui::DragFloat3("Sunlight Direction", &m_light.direction[0], 0.1f, -10.0f,
 		10.0f);
@@ -203,8 +200,8 @@ void Application3D::update(float deltaTime) {
 	ImGui::DragFloat("Camera Speed", &m_camera->m_movementSpeed, 0.1f, 1.0f,
 		10.0f);
 	ImGui::End();
-
 	m_scene->setLight(m_light);
+
 
 	m_scene->update(deltaTime);
 
@@ -228,32 +225,14 @@ void Application3D::draw() {
 		(float)getWindowHeight());
 	glm::mat4 viewMatrix = m_camera->getViewMatrix();
 
-	// bind shader programs
-	m_phongShader.bind();
 
-	//bind shader light
-	m_phongShader.bindUniform("AmbientColour", m_ambientLight);
-	m_phongShader.bindUniform("LightColour", m_light.colour);
-	m_phongShader.bindUniform("LightDirection", m_light.direction);
-	//bind bunny transform
-	auto pvm = projectionMatrix * viewMatrix * m_bunnyTransform;
-	m_phongShader.bindUniform("ProjectionViewModel", pvm);
-
-	//bind transforms for lighting
-	m_phongShader.bindUniform("ModelMatrix", m_bunnyTransform);
-
-	//bind camera
-	m_phongShader.bindUniform("cameraPosition",
-		vec3(glm::inverse(viewMatrix)[3]));
-
-	//draw bunny
-	//m_bunnyMesh.draw();
-
-
+	//-==========================================================================================
+	//Draw grid
+	m_scene->draw();
 	// bind shader
 	m_texturedShader.bind();
 	// bind transform
-	pvm = projectionMatrix * viewMatrix * m_quadTransform;
+	auto pvm = projectionMatrix * viewMatrix * m_quadTransform;
 	m_texturedShader.bindUniform("ProjectionViewModel", pvm);
 	// bind texture location
 	m_texturedShader.bindUniform("diffuseTexture", 0);
@@ -262,17 +241,12 @@ void Application3D::draw() {
 	// draw quad
 	m_quadMesh.draw();
 
+	//-==========================================================================================
+	//Draw scene
 	m_scene->draw();
 
-	//m_texturedShader.bind();
-	//// bind transform
-	//pvm = m_projectionMatrix * m_viewMatrix * m_spearTransform;
-	//m_texturedShader.bindUniform("ProjectionViewModel", pvm);
-	//// draw mesh
-	//m_spearMesh.draw();
 
-
-
+	//-==========================================================================================
 	// draw 3D gizmos
 	Gizmos::draw(projectionMatrix * viewMatrix);
 	// draw 2D gizmos using an orthogonal projection matrix

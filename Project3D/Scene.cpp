@@ -21,19 +21,20 @@ Scene::~Scene()
 }
 void Scene::update(float deltaTime)
 {
+	ImGui::Begin("Lights");
 	for (int i = 0; i < m_pointLights.size(); i++)
 	{
-		//int a = 10;
-		//char* intStr = std::itoa itoa(a);
-		//std::string str = std::string(intStr);
+		std::string menuText = std::string("Light: ") + std::to_string(i);
+		std::string directionText = std::string("Light ") + std::to_string(i) + std::string(" Direction");
+		std::string colourText = std::string("Light ") + std::to_string(i) + std::string(" Colour");
 
-		ImGui::Begin("Light: " /* + string*/);
-		ImGui::DragFloat3("Light Direction", &m_pointLights[i].direction[i], 0.1f, -10.0f,
-		10.0f);
-		ImGui::DragFloat3("Light Colour", &m_pointLights[i].colour[i], 0.1f, 0.0f,
-		2.0f);
-		ImGui::End();
+		ImGui::BeginMenu(menuText.c_str());
+		ImGui::DragFloat3(directionText.c_str(), &m_pointLights[i].direction[0], 0.1f, -100.0f,
+			100.0f);
+		ImGui::DragFloat3(colourText.c_str(), &m_pointLights[i].colour[0], 0.1f, -50.0f,
+			50.0f);
 	}
+	ImGui::End();
 }
 void Scene::draw()
 {

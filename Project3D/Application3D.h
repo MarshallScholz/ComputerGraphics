@@ -17,6 +17,12 @@ public:
 	Application3D();
 	virtual ~Application3D();
 
+	bool loadShaders();
+	bool loadModels();
+	bool loadTextures();
+
+	void createScene();
+
 	virtual bool startup();
 	virtual void shutdown();
 

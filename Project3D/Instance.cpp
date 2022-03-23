@@ -19,7 +19,11 @@ void Instance::draw(Camera* camera, float windowWidth, float windowHeight, glm::
 	m_shader->bindUniform("LightDirection", light->direction);
 	m_shader->bindUniform("cameraPosition", camera->getPosition());
 	// draw mesh
-	m_mesh->draw();
+	if (m_OBJmesh)
+		m_OBJmesh->draw();
+	else
+		m_altMesh->draw();
+
 }
 
 void Instance::draw(Scene* scene)
@@ -27,6 +31,7 @@ void Instance::draw(Scene* scene)
 
 	// set the shader pipeline
 	m_shader->bind();
+	//pvm different each object
 	// bind transform and other uniforms
 	auto pvm = scene->getCamera()->getProjectionMatrix(scene->getWindowSize().x,
 		scene->getWindowSize().y)
@@ -37,7 +42,6 @@ void Instance::draw(Scene* scene)
 	m_shader->bindUniform("AmbientColour", scene->getAmbientLight());
 	m_shader->bindUniform("LightColour", scene->getLight().colour);
 	m_shader->bindUniform("LightDirection", scene->getLight().direction);
-	m_shader->bindUniform("cameraPosition", scene->getCamera()->getPosition());
 
 	m_shader->bindUniform("cameraPosition", scene->getCamera()->getPosition());
 	int numLights = scene->getNumLights();
@@ -45,8 +49,14 @@ void Instance::draw(Scene* scene)
 	m_shader->bindUniform("PointLightPosition", numLights, scene->getPointlightPositions());
 	m_shader->bindUniform("PointLightColour", numLights, scene->getPointlightColours());
 
+	//specific to quad
+	m_shader->bindUniform("diffuseTexture", 0);
+
 	// draw mesh
-	m_mesh->draw();
+	if (m_OBJmesh)
+		m_OBJmesh->draw();
+	else
+		m_altMesh->draw();
 }
 
 void Instance::setTransform(glm::vec3 position, glm::vec3 eulerAngles, glm::vec3 scale)

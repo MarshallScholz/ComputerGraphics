@@ -14,7 +14,14 @@ public:
 	Instance(glm::mat4 transform, aie::OBJMesh* mesh, aie::ShaderProgram* shader) 
 	{
 		m_transform = transform;
-		m_mesh = mesh;
+		m_OBJmesh = mesh;
+		m_shader = shader;
+	}
+
+	Instance(glm::mat4 transform, Mesh* mesh, aie::ShaderProgram* shader)
+	{
+		m_transform = transform;
+		m_altMesh = mesh;
 		m_shader = shader;
 	}
 
@@ -29,7 +36,8 @@ public:
 
 protected:
 	glm::mat4 m_transform;
-	aie::OBJMesh* m_mesh;
+	aie::OBJMesh* m_OBJmesh = nullptr;
+	Mesh* m_altMesh = nullptr;
 	aie::ShaderProgram* m_shader;
 
 
