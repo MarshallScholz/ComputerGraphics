@@ -35,6 +35,16 @@ public:
 
 	void setTransform(glm::vec3 position, glm::vec3 eulerAngles, glm::vec3 scale);
 
+	void setPosition(glm::vec3 position) { m_position = position; }
+	glm::vec3 getPosition() const { return m_position; }
+
+	glm::vec3 getRotation() const { return m_eularAngles; }
+	void setRotation(glm::vec3 eularAngles) { m_eularAngles = eularAngles; }
+
+	glm::vec3 getScale() const { return m_scale; }
+	void setScale(glm::vec3 scale) { m_scale = scale; }
+
+
 	aie::ShaderProgram* getShader() { return m_shader; }
 
 protected:
@@ -42,6 +52,9 @@ protected:
 	aie::OBJMesh* m_OBJmesh = nullptr;
 	Mesh* m_altMesh = nullptr;
 	aie::ShaderProgram* m_shader;
+	glm::vec3 m_position;
+	glm::vec3 m_eularAngles;
+	glm::vec3 m_scale;
 
 
 };

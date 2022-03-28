@@ -66,6 +66,9 @@ void Instance::draw(Scene* scene)
 
 void Instance::setTransform(glm::vec3 position, glm::vec3 eulerAngles, glm::vec3 scale)
 {
+	setPosition(position);
+	setRotation(eulerAngles);
+	setScale(scale);
 	m_transform = glm::translate(glm::mat4(1), position)
 		* glm::rotate(glm::mat4(1), glm::radians(eulerAngles.z), glm::vec3(0, 0, 1))
 		* glm::rotate(glm::mat4(1), glm::radians(eulerAngles.y), glm::vec3(0, 1, 0))

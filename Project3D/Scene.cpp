@@ -43,6 +43,32 @@ void Scene::update(float deltaTime)
 			50.0f);
 	}
 	ImGui::End();
+
+	ImGui::Begin("Gameobjects");
+	int i = 0;
+	for (auto const& instance : m_instances)
+	{
+		std::string menuText = std::string("Gameobject: ") + std::to_string(i);
+		std::string directionText = std::string("Gameobject: ") + std::to_string(i) + std::string(" Direction");
+		std::string colourText = std::string("Gameobject: ") + std::to_string(i) + std::string(" Colour");
+		std::string scaleText = std::string("Gameobject: ") + std::to_string(i) + std::string(" Scale");
+
+		glm::vec3 position = instance->getPosition();
+		glm::vec3 rotation = instance->getRotation();
+		glm::vec3 scale = instance->getScale();
+		
+		ImGui::BeginMenu(menuText.c_str());
+		ImGui::DragFloat3(directionText.c_str(), &position[0], 0.1f, -10000.0f,
+			10000.0f);
+		ImGui::DragFloat3(colourText.c_str(), &rotation[0], 0.1f, -10000.0f,
+			10000.0f);
+		ImGui::DragFloat3(scaleText.c_str(), &scale[0], 0.1f, -10000.0f,
+			10000.0f);
+		i++;
+
+		instance->setTransform(position, rotation, scale);
+	}
+	ImGui::End();
 }
 void Scene::draw()
 {
