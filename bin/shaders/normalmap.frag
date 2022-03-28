@@ -66,8 +66,6 @@ void main() {
 
 	// calculate each light property
 	vec3 ambient = AmbientColour * Ka * texDiffuse;
-	//vec3 diffuse0 = Kd * texDiffuse * diffuseTotal;
-	//vec3 specular0 = Ks * texSpecular * specularTotal;
 
 	for (int i=0; i<numLights; i++)
 	{
@@ -80,9 +78,11 @@ void main() {
 		specularTotal += specular(direction, colour, N, V);
 	}
 
+	vec3 diffuse0 = Kd * texDiffuse * diffuseTotal;
+	vec3 specular0 = Ks * texSpecular * specularTotal;
 
 
-	FragColour = vec4(ambient + diffuseTotal + specularTotal, 1);
+	FragColour = vec4(ambient + diffuse0 + specular0, 1);
 	//FragColour = vec4(N, 1);
 }
 

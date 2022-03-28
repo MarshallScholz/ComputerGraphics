@@ -79,6 +79,12 @@ bool Application3D::loadModels()
 		printf("Soulspear Mesh Error!\n");
 		return false;
 	}
+	if (m_lizardMesh.load("./lizard/JosephStevenson_Lizard.obj",
+		true, true) == false) {
+		printf("Lizard Mesh Error!\n");
+		return false;
+	}
+
 }
 
 bool Application3D::loadTextures()
@@ -129,16 +135,27 @@ void Application3D::createScene()
 	spearInstance1->setTransform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	m_scene->addInstance(spearInstance1);
 
-	Instance* spearInstance2 = new Instance(spearTransform, &m_spearMesh,
-		&m_normalMapShader);
-	spearInstance2->setTransform(glm::vec3(3, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	m_scene->addInstance(spearInstance2);
+	//Instance* spearInstance2 = new Instance(spearTransform, &m_spearMesh,
+	//	&m_normalMapShader);
+	//spearInstance2->setTransform(glm::vec3(3, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	//m_scene->addInstance(spearInstance2);
 
-	Instance* bunnyInstance = new Instance(m_bunnyTransform, &m_bunnyMesh, &m_phongShader);
-	bunnyInstance->setTransform(glm::vec3(-3, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f));
+	//Instance* bunnyInstance = new Instance(m_bunnyTransform, &m_bunnyMesh, &m_phongShader);
+	//bunnyInstance->setTransform(glm::vec3(-3, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f));
 
-	m_scene->addInstance(bunnyInstance);
+	//m_scene->addInstance(bunnyInstance);
 
+
+	//glm::mat4 lizardTransform
+	//{
+	//	1,0,0,0,
+	//	0,1,0,0,
+	//	0,0,1,0,
+	//	0,0,0,1
+	//};
+	//Instance* lizardInstance = new Instance(lizardTransform, &m_lizardMesh, &m_normalMapShader);
+	//lizardInstance->setTransform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0.1f, 0.1f, 0.1f));
+	//m_scene->addInstance(lizardInstance);
 	// red light on the left
 	m_scene->getPointLights().push_back(Light(vec3(5, 3, 0), vec3(1, 0, 0), 50));
 	// green light on the right

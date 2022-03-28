@@ -52,6 +52,9 @@ protected:
 	aie::OBJMesh m_spearMesh;
 	//glm::mat4 m_spearTransform;
 
+	aie::OBJMesh m_lizardMesh;
+
+
 
 	Light m_light;
 	glm::vec3 m_ambientLight;

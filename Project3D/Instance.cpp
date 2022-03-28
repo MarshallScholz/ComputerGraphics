@@ -32,7 +32,7 @@ void Instance::initializeShader(Scene* scene)
 	// set the shader pipeline
 	m_shader->bind();
 
-	//bind uniforms
+	m_shader->bindUniform("ModelMatrix", m_transform);
 	m_shader->bindUniform("AmbientColour", scene->getAmbientLight());
 	m_shader->bindUniform("LightColour", scene->getLight().colour);
 	m_shader->bindUniform("LightDirection", scene->getLight().direction);
@@ -44,10 +44,11 @@ void Instance::initializeShader(Scene* scene)
 	m_shader->bindUniform("PointLightColour", numLights, scene->getPointlightColours());
 
 	//specific to quad
-	m_shader->bindUniform("diffuseTexture", 0);
+	//m_shader->bindUniform("diffuseTexture", 0);
 }
 void Instance::draw(Scene* scene)
 {
+	initializeShader(scene);
 	// bind pvm and transform
 	auto pvm = scene->getCamera()->getProjectionMatrix(scene->getWindowSize().x,
 		scene->getWindowSize().y)

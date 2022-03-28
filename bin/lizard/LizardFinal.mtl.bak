@@ -1,0 +1,13 @@
+#
+#
+#
+
+newmtl _Lizard_MAT
+illum 2
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ns 20.000000
+#map_Kd JosephStevenson_LeopardHunter_BaseColor.png
+#map_Ks JosephStevenson_LeopardHunter_Roughness.png
+#bump JosephStevenson_LeopardHunter_Normal.png
