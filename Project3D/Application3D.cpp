@@ -126,17 +126,17 @@ void Application3D::createScene()
 
 	Instance* spearInstance1 = new Instance(spearTransform, &m_spearMesh,
 		&m_normalMapShader);
-
 	spearInstance1->setTransform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	m_scene->addInstance(spearInstance1);
 
 	Instance* spearInstance2 = new Instance(spearTransform, &m_spearMesh,
 		&m_normalMapShader);
-
 	spearInstance2->setTransform(glm::vec3(3, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	m_scene->addInstance(spearInstance2);
 
 	Instance* bunnyInstance = new Instance(m_bunnyTransform, &m_bunnyMesh, &m_phongShader);
+	bunnyInstance->setTransform(glm::vec3(-3, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f));
+
 	m_scene->addInstance(bunnyInstance);
 
 	// red light on the left

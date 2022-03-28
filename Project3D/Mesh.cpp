@@ -21,7 +21,8 @@ void Mesh::initialiseQuad()
 	// define 6 vertices for 2 triangles
 	Vertex vertices[6];
 
-	//first element position
+	//first element 
+
 	vertices[0].position = { -0.5f, 0, 0.5f, 1 };
 	vertices[1].position = { 0.5f, 0, 0.5f, 1 };
 	vertices[2].position = { -0.5f, 0, -0.5f, 1 };

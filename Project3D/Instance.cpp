@@ -30,31 +30,9 @@ void Instance::draw(Camera* camera, float windowWidth, float windowHeight, glm::
 void Instance::initializeShader(Scene* scene)
 {
 	// set the shader pipeline
-	//m_shader->bind();
-
-	//m_shader->bindUniform("AmbientColour", scene->getAmbientLight());
-	//m_shader->bindUniform("LightColour", scene->getLight().colour);
-	//m_shader->bindUniform("LightDirection", scene->getLight().direction);
-
-	//m_shader->bindUniform("cameraPosition", scene->getCamera()->getPosition());
-	//int numLights = scene->getNumLights();
-	//m_shader->bindUniform("numLights", numLights);
-	//m_shader->bindUniform("PointLightPosition", numLights, scene->getPointlightPositions());
-	//m_shader->bindUniform("PointLightColour", numLights, scene->getPointlightColours());
-}
-void Instance::draw(Scene* scene)
-{
-
-	// set the shader pipeline
 	m_shader->bind();
-	//pvm different each object
-	// bind transform and other uniforms
-	auto pvm = scene->getCamera()->getProjectionMatrix(scene->getWindowSize().x,
-		scene->getWindowSize().y)
-		* scene->getCamera()->getViewMatrix() * m_transform;
-	m_shader->bindUniform("ProjectionViewModel", pvm);
 
-	m_shader->bindUniform("ModelMatrix", m_transform);
+	//bind uniforms
 	m_shader->bindUniform("AmbientColour", scene->getAmbientLight());
 	m_shader->bindUniform("LightColour", scene->getLight().colour);
 	m_shader->bindUniform("LightDirection", scene->getLight().direction);
@@ -67,6 +45,16 @@ void Instance::draw(Scene* scene)
 
 	//specific to quad
 	m_shader->bindUniform("diffuseTexture", 0);
+}
+void Instance::draw(Scene* scene)
+{
+	// bind pvm and transform
+	auto pvm = scene->getCamera()->getProjectionMatrix(scene->getWindowSize().x,
+		scene->getWindowSize().y)
+		* scene->getCamera()->getViewMatrix() * m_transform;
+	m_shader->bindUniform("ProjectionViewModel", pvm);
+
+	m_shader->bindUniform("ModelMatrix", m_transform);
 
 	// draw mesh
 	if (m_OBJmesh)

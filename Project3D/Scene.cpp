@@ -13,7 +13,7 @@ void Scene::addInstance(Instance* instance)
 		return;
 
 	shaderMap.insert(std::make_pair(instance->getShader(), shaderMap.size() + 1));
-	shaderKey[shaderMap.size()] = instance->getShader();
+	shaderKey[shaderMap.size() - 1] = instance->getShader();
 }
 Scene::Scene(Camera* camera, glm::vec2 windowSize, Light& light, glm::vec3 ambientLight)
 {
@@ -55,16 +55,17 @@ void Scene::draw()
 
 	for (int s = 0; s < shaderMap.size(); s++)
 	{
-		bool shaderInitialized = false;
-		for (int i = 0; i < m_instances.size(); i++) 
+		bool startedShader = false;
+		for (auto const& i : m_instances) 
 		{
-			Instance* currentInstance = m_instances.front() + i;
-			if (shaderKey[s] == currentInstance->getShader())
+			if (i->getShader() == shaderKey[s]) 
 			{
-				if (shaderInitialized == false) {
-					currentInstance->initializeShader(this);
+				if (startedShader == false) {
+					i->initializeShader(this);
 				}
-				currentInstance->draw(this);
+				i->draw(this);
+				startedShader = true;
+
 			}
 		}
 	}

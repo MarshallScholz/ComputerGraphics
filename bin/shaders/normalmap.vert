@@ -14,7 +14,7 @@ uniform mat4 ProjectionViewModel;
 uniform mat4 ModelMatrix;
 
 void main() {
-	vPosition = ModelMatrix * Position;
+	vPosition = ModelMatrix * Position; 
 	vNormal = (ModelMatrix * Normal).xyz;
 	vTexCoord = TexCoord;
 	vTangent = (ModelMatrix * vec4(Tangent.xyz,0)).xyz;
