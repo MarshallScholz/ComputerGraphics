@@ -106,6 +106,12 @@
     <None Include="..\bin\shaders\normalmap.vert">
       <Filter>Shaders\Vert</Filter>
     </None>
+    <None Include="..\bin\shaders\toon.frag">
+      <Filter>Shaders\Frag</Filter>
+    </None>
+    <None Include="..\bin\shaders\toon.vert">
+      <Filter>Shaders\Vert</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project3D.rc">

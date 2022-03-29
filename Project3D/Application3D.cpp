@@ -51,17 +51,28 @@ bool Application3D::loadShaders()
 	m_shader.loadShader(aie::eShaderStage::FRAGMENT,
 		"./shaders/simple.frag");
 
+	if (m_shader.link() == false) {
+		printf("Shader Error: %s\n", m_shader.getLastError());
+		return false;
+	}
+
 	m_phongShader.loadShader(aie::eShaderStage::VERTEX,
 		"./shaders/phong.vert");
 	m_phongShader.loadShader(aie::eShaderStage::FRAGMENT,
 		"./shaders/phong.frag");
 
-	if (m_shader.link() == false) {
+	if (m_phongShader.link() == false) {
 		printf("Shader Error: %s\n", m_shader.getLastError());
 		return false;
 	}
-	if (m_phongShader.link() == false) {
-		printf("Shader Error: %s\n", m_shader.getLastError());
+
+	m_toonShader.loadShader(aie::eShaderStage::VERTEX,
+		"./shaders/toon.vert");
+	m_toonShader.loadShader(aie::eShaderStage::FRAGMENT,
+		"./shaders/toon.frag");
+
+	if (m_toonShader.link() == false) {
+		printf("Shader Error: %s\n", m_toonShader.getLastError());
 		return false;
 	}
 }
@@ -133,10 +144,10 @@ void Application3D::createScene()
 	Instance* spearInstance1 = new Instance(spearTransform, &m_spearMesh,
 		&m_normalMapShader);
 	spearInstance1->setTransform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	m_scene->addInstance(spearInstance1);
+	//m_scene->addInstance(spearInstance1);
 
 	Instance* spearInstance2 = new Instance(spearTransform, &m_spearMesh,
-		&m_normalMapShader);
+		&m_toonShader);
 	spearInstance2->setTransform(glm::vec3(3, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	m_scene->addInstance(spearInstance2);
 
@@ -155,7 +166,7 @@ void Application3D::createScene()
 	};
 	Instance* lizardInstance = new Instance(lizardTransform, &m_lizardMesh, &m_normalMapShader);
 	lizardInstance->setTransform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0.1f, 0.1f, 0.1f));
-	m_scene->addInstance(lizardInstance);
+	//m_scene->addInstance(lizardInstance);
 	// red light on the left
 	m_scene->getPointLights().push_back(Light(vec3(5, 3, 0), vec3(1, 0, 0), 50));
 	// green light on the right
@@ -210,8 +221,8 @@ void Application3D::update(float deltaTime)
 
 	//Update sunlight
 	ImGui::Begin("Global Settings");
-	ImGui::DragFloat3("Sunlight Direction", &m_light.direction[0], 0.1f, -10.0f,
-		10.0f);
+	ImGui::DragFloat3("Sunlight Direction", &m_light.direction[0], 0.1f, -1000.0f,
+		1000.0f);
 	ImGui::DragFloat3("Sunlight Colour", &m_light.colour[0], 0.1f, 0.0f,
 		2.0f);
 	ImGui::DragFloat("Camera Speed", &m_camera->m_movementSpeed, 0.1f, 1.0f,

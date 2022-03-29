@@ -40,6 +40,7 @@ protected:
 	aie::ShaderProgram m_phongShader;
 	aie::ShaderProgram m_texturedShader;
 	aie::ShaderProgram m_normalMapShader;
+	aie::ShaderProgram m_toonShader;
 
 
 

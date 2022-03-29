@@ -82,14 +82,14 @@ void Scene::draw()
 	for (int s = 0; s < shaderMap.size(); s++)
 	{
 		bool startedShader = false;
-		for (auto const& i : m_instances) 
+		for (auto const& instance : m_instances) 
 		{
-			if (i->getShader() == shaderKey[s]) 
+			if (instance->getShader() == shaderKey[s])
 			{
 				if (startedShader == false) {
-					i->initializeShader(this);
+					instance->initializeShader(this);
 				}
-				i->draw(this);
+				instance->draw(this);
 				startedShader = true;
 
 			}

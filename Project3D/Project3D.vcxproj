@@ -200,6 +200,8 @@
     <None Include="..\bin\shaders\simple.vert" />
     <None Include="..\bin\shaders\texture.frag" />
     <None Include="..\bin\shaders\texture.vert" />
+    <None Include="..\bin\shaders\toon.frag" />
+    <None Include="..\bin\shaders\toon.vert" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project3D.rc" />
