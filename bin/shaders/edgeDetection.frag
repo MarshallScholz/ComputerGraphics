@@ -23,6 +23,17 @@ uniform vec3 PointLightColour[MAX_LIGHTS];
 uniform vec3 PointLightPosition[MAX_LIGHTS];
 
 
+const int SobelX[9] = int[9](
+    1, 0, -1,
+    2, 0, -2,
+    1, 0, -1
+);
+
+const int SobelY[9] = int[9](
+    1, 2, 1,
+    0, 0, 0,
+    -1, -2, -1
+);
 
 uniform vec3 cameraPosition;
 
@@ -38,7 +49,13 @@ vec3 specular(vec3 direction, vec3 colour, vec3 normal, vec3 view)
 	return specularTerm * colour;
 }
 
+float getEdge()
+{
+	
 
+
+	return 0;
+}
 
 void main() {
 	vec3 N = normalize(vNormal);
@@ -81,20 +98,9 @@ void main() {
 	vec3 diffuse0 = Kd * texDiffuse * diffuseTotal;
 	vec3 specular0 = Ks * texSpecular * specularTotal;
 
+	float edge = getEdge();
 
-	//edge = 1 - 0 if the pixel isn't facing the camera
-	//edge = 1 - 1 if the pixel is directly facing the camera
-	//edge = 1 - 0.4 if the pixel is partically facing the camera
-	float edge = 1-max(0, dot(N,V));
-	//modify the below value to create thicker/thinner edges
-	if(edge > 0.5)
-	{
-		edge = 1;
-	}
-	edge = edge * edge * edge;
-
-
-	FragColour = vec4(ambient + diffuse0 + specular0 - edge, 1);
+	FragColour = vec4(ambient + diffuse0 + specular0 + edge, 1);
 	//FragColour = vec4(N, 1);
 }
 

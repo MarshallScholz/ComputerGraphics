@@ -75,6 +75,16 @@ bool Application3D::loadShaders()
 		printf("Shader Error: %s\n", m_toonShader.getLastError());
 		return false;
 	}
+
+	m_edgeShader.loadShader(aie::eShaderStage::VERTEX,
+		"./shaders/edgeDetection.vert");
+	m_edgeShader.loadShader(aie::eShaderStage::FRAGMENT,
+		"./shaders/edgeDetection.frag");
+
+	if (m_edgeShader.link() == false) {
+		printf("Shader Error: %s\n", m_edgeShader.getLastError());
+		return false;
+	}
 }
 
 bool Application3D::loadModels()
@@ -147,8 +157,8 @@ void Application3D::createScene()
 	//m_scene->addInstance(spearInstance1);
 
 	Instance* spearInstance2 = new Instance(spearTransform, &m_spearMesh,
-		&m_toonShader);
-	spearInstance2->setTransform(glm::vec3(3, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+		&m_edgeShader);
+	spearInstance2->setTransform(glm::vec3(0, 0, 0), glm::vec3(0, 90, 0), glm::vec3(1, 1, 1));
 	m_scene->addInstance(spearInstance2);
 
 	//Instance* bunnyInstance = new Instance(m_bunnyTransform, &m_bunnyMesh, &m_phongShader);
@@ -164,13 +174,13 @@ void Application3D::createScene()
 		0,0,1,0,
 		0,0,0,1
 	};
-	Instance* lizardInstance = new Instance(lizardTransform, &m_lizardMesh, &m_normalMapShader);
-	lizardInstance->setTransform(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0.1f, 0.1f, 0.1f));
-	//m_scene->addInstance(lizardInstance);
+	Instance* lizardInstance = new Instance(lizardTransform, &m_lizardMesh, &m_edgeShader);
+	lizardInstance->setTransform(glm::vec3(0, 0.6f, -1.7f), glm::vec3(0, -93, 0), glm::vec3(0.03f, 0.03f, 0.03f));
+	m_scene->addInstance(lizardInstance);
 	// red light on the left
-	m_scene->getPointLights().push_back(Light(vec3(5, 3, 0), vec3(1, 0, 0), 50));
+	m_scene->getPointLights().push_back(Light(vec3(-5, 2, 0), vec3(1, 1, 1), 50));
 	// green light on the right
-	m_scene->getPointLights().push_back(Light(vec3(-5, 3, 0), vec3(0, 1, 0), 50));
+	//m_scene->getPointLights().push_back(Light(vec3(-5, 3, 0), vec3(0, 1, 0), 50));
 }
 
 

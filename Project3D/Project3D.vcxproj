@@ -192,6 +192,8 @@
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin\shaders\edgeDetection.frag" />
+    <None Include="..\bin\shaders\edgeDetection.vert" />
     <None Include="..\bin\shaders\normalmap.frag" />
     <None Include="..\bin\shaders\normalmap.vert" />
     <None Include="..\bin\shaders\phong.frag" />

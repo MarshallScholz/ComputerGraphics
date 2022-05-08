@@ -112,6 +112,12 @@
     <None Include="..\bin\shaders\toon.vert">
       <Filter>Shaders\Vert</Filter>
     </None>
+    <None Include="..\bin\shaders\edgeDetection.frag">
+      <Filter>Shaders\Frag</Filter>
+    </None>
+    <None Include="..\bin\shaders\edgeDetection.vert">
+      <Filter>Shaders\Vert</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Project3D.rc">
