@@ -15,8 +15,46 @@ using glm::vec4;
 using glm::mat4;
 using aie::Gizmos;
 
-Application3D::Application3D() {
+Application3D::Application3D()
+{
+	m_viewMatrix = glm::mat4(1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1);
 
+	m_projectionMatrix = glm::mat4(1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1);
+
+	//m_quadMesh = NULL;
+	m_quadTransform = glm::mat4(1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1);
+
+	//aie::OBJMesh m_bunnyMesh;
+	m_bunnyTransform = glm::mat4(1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 1, 1);
+
+	//aie::OBJMesh m_spearMesh;
+	//glm::mat4 m_spearTransform;
+
+	//aie::OBJMesh m_lizardMesh;
+
+
+
+	//Light m_light;
+	 m_ambientLight = glm::vec3(1, 1, 1);
+
+	m_camera = nullptr;
+
+	m_scene = nullptr;
+
+	//glm::mat4 m_spearTransform;
+	m_spearInstance = nullptr;
 }
 
 Application3D::~Application3D() {
@@ -85,6 +123,7 @@ bool Application3D::loadShaders()
 		printf("Shader Error: %s\n", m_edgeShader.getLastError());
 		return false;
 	}
+	return true;
 }
 
 bool Application3D::loadModels()
@@ -105,7 +144,7 @@ bool Application3D::loadModels()
 		printf("Lizard Mesh Error!\n");
 		return false;
 	}
-
+	return true;
 }
 
 bool Application3D::loadTextures()
@@ -114,6 +153,8 @@ bool Application3D::loadTextures()
 		printf("Failed to load texture!\n");
 		return false;
 	}
+
+	return true;
 }
 
 void Application3D::createScene()

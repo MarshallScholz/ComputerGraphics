@@ -32,6 +32,7 @@ public:
 protected:
 
 	glm::mat4	m_viewMatrix;
+
 	glm::mat4	m_projectionMatrix;
 
 	aie::Texture m_gridTexture;
@@ -59,11 +60,11 @@ protected:
 
 
 	Light m_light;
-	glm::vec3 m_ambientLight;
+	glm::vec3 m_ambientLight; 
 
-	Camera* m_camera;
+	Camera* m_camera = nullptr;
 
-	Scene* m_scene;
+	Scene* m_scene = nullptr;
 
 	//glm::mat4 m_spearTransform;
 	Instance* m_spearInstance;

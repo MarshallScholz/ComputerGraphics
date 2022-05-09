@@ -19,7 +19,7 @@ private:
 	float m_phi = 0;
 	glm::vec3 m_position = glm::vec3(-5, 2, 0);
 
-	float m_lastMouseX;
-	float m_lastMouseY;
+	float m_lastMouseX = 0;
+	float m_lastMouseY = 0;
 };
 

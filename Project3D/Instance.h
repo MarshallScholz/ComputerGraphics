@@ -48,13 +48,16 @@ public:
 	aie::ShaderProgram* getShader() { return m_shader; }
 
 protected:
-	glm::mat4 m_transform;
+	glm::mat4 m_transform = glm::mat4(1, 1, 1, 1,
+								   	1, 1, 1, 1,
+									1, 1, 1, 1,
+									1, 1, 1, 1);
 	aie::OBJMesh* m_OBJmesh = nullptr;
 	Mesh* m_altMesh = nullptr;
 	aie::ShaderProgram* m_shader;
-	glm::vec3 m_position;
-	glm::vec3 m_eularAngles;
-	glm::vec3 m_scale;
+	glm::vec3 m_position = glm::vec3(0, 0, 0);
+	glm::vec3 m_eularAngles = glm::vec3(0, 0, 0);
+	glm::vec3 m_scale = glm::vec3(1, 1, 1);
 
 
 };

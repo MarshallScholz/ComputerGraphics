@@ -3,7 +3,11 @@
 class Light
 {
 public:
-	Light() {};
+	Light() 
+	{
+		direction = glm::vec3(0, 0, 0);
+		colour = glm::vec3(0, 0, 0);
+	};
 
 	Light(glm::vec3 pos, glm::vec3 col, float intensity)
 	{

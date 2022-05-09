@@ -4,6 +4,8 @@
 #include <imgui.cpp>
 #include <sstream>
 #include <map>
+
+class ShaderProgram;
 void Scene::addInstance(Instance* instance)
 {
 	m_instances.push_back(instance);
@@ -21,6 +23,15 @@ Scene::Scene(Camera* camera, glm::vec2 windowSize, Light& light, glm::vec3 ambie
 	m_windowSize = windowSize;
 	m_sunLight = light;
 	m_ambientLight = ambientLight;
+	for (int i = 0; i < MAX_LIGHTS; i++)
+	{
+		m_pointLightPositions[i] = glm::vec3(0, 0, 0);
+		m_pointLightColours[i] = glm::vec3(0, 0, 0);
+	}
+	//for (int i = 0; i < sizeof(shaderKey); i++) 
+	//{
+	//	shaderKey[i] = nullptr;
+	//}
 }
 Scene::~Scene()
 {

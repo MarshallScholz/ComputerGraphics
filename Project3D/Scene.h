@@ -38,18 +38,18 @@ public:
 
 
 protected:
-	Camera* m_camera;
-	glm::vec2 m_windowSize;
-	Light m_sunLight;
-	std::vector<Light> m_pointLights;
-	glm::vec3 m_ambientLight;
-	std::list<Instance*> m_instances;
+	Camera* m_camera = nullptr;
+	glm::vec2 m_windowSize = glm::vec2(0, 0);
+	Light m_sunLight = Light();
+	std::vector<Light> m_pointLights = std::vector<Light>();
+	glm::vec3 m_ambientLight = glm::vec3(0, 0, 0);
+	std::list<Instance*> m_instances = std::list<Instance*>();
 
 	glm::vec3 m_pointLightPositions[MAX_LIGHTS];
 	glm::vec3 m_pointLightColours[MAX_LIGHTS];
 
 	std::map<aie::ShaderProgram*, int> shaderMap;
-	aie::ShaderProgram* shaderKey[];
+	aie::ShaderProgram* shaderKey[10] = {nullptr};
 
 };
 
